@@ -4,7 +4,6 @@ import { FiShoppingCart } from "react-icons/fi";
 import Modal from "./Modal";
 import UsuariosTable from "./TablaUsuarios";
 
-// Definir el tipo para un usuario
 interface Usuario {
   nombre: string;
   email: string;
@@ -19,12 +18,11 @@ const Navbar: React.FC = () => {
   const [password, setPassword] = useState<string>("");
   const [confirmarPassword, setConfirmarPassword] = useState<string>("");
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
+  const [usuarioEditado, setUsuarioEditado] = useState<Usuario | null>(null);
 
-  // Abre y cierra el modal de registro
   const abrirModalRegistro = () => setModalRegistroAbierto(true);
   const cerrarModalRegistro = () => setModalRegistroAbierto(false);
 
-  // Al montar el componente, cargar usuarios desde el localStorage
   useEffect(() => {
     const usuariosGuardados = JSON.parse(
       localStorage.getItem("usuarios") || "[]"
@@ -32,7 +30,6 @@ const Navbar: React.FC = () => {
     setUsuarios(usuariosGuardados);
   }, []);
 
-  // Manejar el envío del formulario de registro
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
@@ -47,24 +44,35 @@ const Navbar: React.FC = () => {
       password,
     };
 
-    // Guardar el nuevo usuario en el localStorage
-    const usuariosGuardados = JSON.parse(
+    let usuariosGuardados = JSON.parse(
       localStorage.getItem("usuarios") || "[]"
     ) as Usuario[];
-    usuariosGuardados.push(nuevoUsuario);
+
+    if (usuarioEditado) {
+      usuariosGuardados[usuarioEditado.index] = nuevoUsuario;
+    } else {
+      usuariosGuardados.push(nuevoUsuario);
+    }
     localStorage.setItem("usuarios", JSON.stringify(usuariosGuardados));
 
-    // Actualizar el estado con los usuarios guardados
     setUsuarios(usuariosGuardados);
 
-    // Limpiar el formulario
     setNombre("");
     setEmail("");
     setPassword("");
     setConfirmarPassword("");
+    setUsuarioEditado(null);
 
-    // Cerrar el modal
     cerrarModalRegistro();
+  };
+
+  const editarUsuario = (usuario: Usuario, index: number) => {
+    setUsuarioEditado({ ...usuario, index });
+    setNombre(usuario.nombre);
+    setEmail(usuario.email);
+    setPassword("");
+    setConfirmarPassword("");
+    abrirModalRegistro();
   };
 
   return (
@@ -100,12 +108,14 @@ const Navbar: React.FC = () => {
         </div>
       </div>
 
-      {/* Modal de Registro */}
+      {/* Modal de Registro o Edición */}
       <Modal
         estaAbierto={modalRegistroAbierto}
         estaCerrado={cerrarModalRegistro}
       >
-        <h2 className="text-xl font-semibold mb-2">Registrarse</h2>
+        <h2 className="text-xl font-semibold mb-2">
+          {usuarioEditado ? "Editar Usuario" : "Registrarse"}
+        </h2>
         <form onSubmit={handleSubmit}>
           <div className="mt-4">
             <label htmlFor="nombre" className="block">
@@ -163,14 +173,15 @@ const Navbar: React.FC = () => {
             type="submit"
             className="w-full mt-4 bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
           >
-            Registrarse
+            {usuarioEditado ? "Guardar Cambios" : "Registrarse"}
           </button>
         </form>
       </Modal>
 
       <div className="border-b border-gray-200 pt-4"></div>
 
-      <UsuariosTable usuarios={usuarios} />
+      {/* Tabla de Usuarios */}
+      <UsuariosTable usuarios={usuarios} editarUsuario={editarUsuario} />
     </div>
   );
 };
