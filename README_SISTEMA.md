@@ -5,7 +5,9 @@
 #Librerias utilizables
 
 +react
-+react-icons
+npm install react-icons => libreria para poder utilizar iconos con react
+npm install @tanstack/react-table => libreria para utilizar tablas mejor estructuradas
+npm install react-router-dom => libreria para la navegacion entre rutas
 
 #Tegnologias utilizadas para el Frontend
 
