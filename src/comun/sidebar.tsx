@@ -7,9 +7,9 @@ import { Link } from "react-router-dom";
 
 const Sidebar = () => {
   const menus = [
-    { name: "Panel_Control", link: "/", icon: RxDashboard },
-    { name: "Usuarios", link: "/", icon: FaRegUser },
-    { name: "Productos", link: "/", icon: FiShoppingCart },
+    { name: "Panel_Control", link: "panelControl", icon: RxDashboard },
+    { name: "Usuarios", link: "usuarios", icon: FaRegUser },
+    { name: "Productos", link: "productos", icon: FiShoppingCart },
   ];
   const [open, setOpen] = React.useState<boolean>(true);
   return (
