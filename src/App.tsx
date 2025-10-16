@@ -5,6 +5,7 @@ import Navbar from "./comun/navbar";
 import Sidebar from "./comun/sidebar";
 import Usuarios from "./paginas/Usuarios";
 import Productos from "./paginas/Productos";
+import PanelControl from "./paginas/panelControl";
 
 function App() {
   return (
@@ -16,7 +17,7 @@ function App() {
 
         <main className="p-4 flex-1">
           <Routes>
-            <Route path="/" element={<h1>Panel de Control</h1>} />
+            <Route path="/panelControl" element={<PanelControl />} />
             <Route path="/usuarios" element={<Usuarios />} />
             <Route path="/productos" element={<Productos />} />
           </Routes>
