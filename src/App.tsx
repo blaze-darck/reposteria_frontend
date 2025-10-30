@@ -9,6 +9,7 @@ import Layout from "./comun/vistarPaginaWeb/layout";
 import PanelControl from "./paginas/panelControl";
 import Usuarios from "./paginas/Usuarios";
 import Productos from "./paginas/Productos";
+import Pedidos from "./paginas/pedidos";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="panelControl" element={<PanelControl />} />
         <Route path="usuarios" element={<Usuarios />} />
         <Route path="productos" element={<Productos />} />
+        <Route path="pedidos" element={<Pedidos />} />
       </Route>
     </Routes>
   );
