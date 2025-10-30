@@ -1,1 +1,25 @@
 @import "tailwindcss";
+
+.bg-primario {
+  background-color: #e6b8b8;
+}
+
+.bg-primario-hover {
+  background-color: #d4a1a1;
+}
+
+.text-texto {
+  color: #2d3142;
+}
+
+.bg-secundario {
+  background-color: #ffd166;
+}
+
+.bg-accent {
+  background-color: #06d6a0;
+}
+
+.bg-background {
+  background-color: #ffffff;
+}
