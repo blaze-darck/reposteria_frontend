@@ -52,6 +52,7 @@ export default function TablaProductos() {
           className="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition"
           title="Adicionar producto"
         >
+          Agregar
           <FaPlus size={18} />
         </button>
       </div>
