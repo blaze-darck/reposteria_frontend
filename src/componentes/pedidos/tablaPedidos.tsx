@@ -56,6 +56,7 @@ export default function PedidosTabla() {
           className="p-2 bg-green-600 text-white rounded-full hover:bg-green-700 transition"
           title="Adicionar pedido"
         >
+          Agregar
           <FaPlus size={18} />
         </button>
       </div>
