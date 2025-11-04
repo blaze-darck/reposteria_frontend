@@ -1,4 +1,4 @@
-import TablaUsuarios from "../componentes/usuarios/tabla_usuarios";
+import TablaUsuarios from "../componentes/usuarios/tablaUsuarios";
 
 function Usuarios() {
   return (
