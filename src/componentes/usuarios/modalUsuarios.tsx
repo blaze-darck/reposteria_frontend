@@ -19,9 +19,15 @@ export default function ModalRegistro({
     direccion: "",
     contraseña: "",
     confirmarContraseña: "",
+    rol: "usuario",
   });
 
-  // Efecto para llenar el formulario con los datos del usuario si se está editando
+  const [errors, setErrors] = useState({});
+
+  const nameRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+
   useEffect(() => {
     if (usuario) {
       setFormData({
@@ -31,9 +37,11 @@ export default function ModalRegistro({
         correo_electronico: usuario.correo_electronico,
         fecha_nacimiento: usuario.fecha_nacimiento,
         direccion: usuario.direccion,
-        contraseña: "", // La contraseña y confirmarContraseña se vacían en edición
+        contraseña: "",
         confirmarContraseña: "",
+        rol: usuario.rol || "usuario",
       });
+      setErrors({});
     } else {
       setFormData({
         nombre: "",
@@ -44,62 +52,117 @@ export default function ModalRegistro({
         direccion: "",
         contraseña: "",
         confirmarContraseña: "",
+        rol: "usuario",
       });
     }
   }, [usuario]);
 
+  const validateField = (name, value) => {
+    let error = "";
+
+    switch (name) {
+      case "nombre":
+      case "apellido_paterno":
+      case "apellido_materno":
+        if (!value.trim()) error = "Campo obligatorio.";
+        else if (!nameRegex.test(value)) error = "Solo letras y espacios.";
+        break;
+
+      case "correo_electronico":
+        if (!value.trim()) error = "Correo obligatorio.";
+        else if (!emailRegex.test(value)) error = "Formato de correo inválido.";
+        break;
+
+      case "fecha_nacimiento":
+        if (!value) error = "Campo obligatorio.";
+        else {
+          const fecha = new Date(value);
+          const hoy = new Date();
+          const hace60Anios = new Date();
+          hace60Anios.setFullYear(hoy.getFullYear() - 60);
+          if (fecha > hoy) error = "No puede ser una fecha futura.";
+          else if (fecha < hace60Anios)
+            error = "La edad no puede superar los 60 años.";
+        }
+        break;
+
+      case "direccion":
+        if (!value.trim()) error = "La dirección es obligatoria.";
+        break;
+
+      case "contraseña":
+        if (!usuario && !value) error = "Campo obligatorio.";
+        else if (!usuario && !passwordRegex.test(value))
+          error = "Debe tener 8 caracteres, letras y números.";
+        break;
+
+      case "confirmarContraseña":
+        if (!usuario && value !== formData.contraseña)
+          error = "Las contraseñas no coinciden.";
+        break;
+    }
+
+    return error;
+  };
+
   const handleChange = (e) => {
+    const { name, value } = e.target;
+
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
+
+    setErrors({
+      ...errors,
+      [name]: validateField(name, value),
+    });
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    Object.keys(formData).forEach((key) => {
+      const error = validateField(key, formData[key]);
+      if (error) newErrors[key] = error;
+    });
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!validateForm()) return;
 
-    // Verificamos que las contraseñas coincidan solo cuando sea un nuevo usuario
-    if (!usuario && formData.contraseña !== formData.confirmarContraseña) {
-      alert("Las contraseñas no coinciden");
+    const usuariosGuardados =
+      JSON.parse(localStorage.getItem("usuarios")) || [];
+    const correoExistente = usuariosGuardados.find(
+      (u) =>
+        u.correo_electronico === formData.correo_electronico &&
+        (!usuario || u.id !== usuario.id)
+    );
+
+    if (correoExistente) {
+      setErrors({
+        ...errors,
+        correo_electronico: "Este correo ya está registrado.",
+      });
       return;
     }
 
     const nuevoUsuario = {
-      id: usuario ? usuario.id : Date.now(), // Si es edición, usamos el ID existente
-      nombre: formData.nombre,
-      apellido_paterno: formData.apellido_paterno,
-      apellido_materno: formData.apellido_materno,
-      correo_electronico: formData.correo_electronico,
-      fecha_nacimiento: formData.fecha_nacimiento,
-      direccion: formData.direccion,
-      contraseña: formData.contraseña,
+      id: usuario ? usuario.id : Date.now(),
+      ...formData,
     };
 
-    // Recuperamos los usuarios almacenados en el localStorage
-    const usuariosGuardados =
-      JSON.parse(localStorage.getItem("usuarios")) || [];
-
     if (usuario) {
-      // Si es edición, actualizamos el usuario con el ID correcto
-      const index = usuariosGuardados.findIndex(
-        (user) => user.id === usuario.id
-      );
-      if (index !== -1) {
-        // Actualizamos el usuario en el arreglo
-        usuariosGuardados[index] = nuevoUsuario;
-      }
+      const index = usuariosGuardados.findIndex((u) => u.id === usuario.id);
+      if (index !== -1) usuariosGuardados[index] = nuevoUsuario;
     } else {
-      // Si es creación, agregamos un nuevo usuario al arreglo
       usuariosGuardados.push(nuevoUsuario);
     }
 
-    // Guardamos los usuarios actualizados en localStorage
     localStorage.setItem("usuarios", JSON.stringify(usuariosGuardados));
-
-    // Llamamos a la función onRegister para notificar que el usuario ha sido registrado/actualizado
     onRegister();
-
-    // Cerramos el modal
     onClose();
   };
 
@@ -107,148 +170,132 @@ export default function ModalRegistro({
 
   return (
     <div className="fixed inset-0 flex justify-center items-center z-50">
-      <div className="bg-gray-900 bg-opacity-50 w-full max-w-sm p-8 rounded-lg shadow-lg relative z-10">
-        <div className="bg-white p-8 rounded-lg shadow-lg w-full">
-          <h2 className="text-2xl font-semibold text-center mb-6 text-gray-800">
-            {usuario ? "Editar Usuario" : "Registrar Usuario"}
-          </h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Campo Nombre */}
-            <div className="flex items-center border-b-2 border-gray-300 pb-2">
-              <input
-                type="text"
-                placeholder="Nombre"
-                name="nombre"
-                value={formData.nombre}
-                onChange={handleChange}
-                className="w-full bg-transparent outline-none placeholder-gray-600"
-                required
-              />
-              <FaUserCircle className="text-2xl text-gray-600 ml-3" />
-            </div>
+      {/* Fondo difuminado */}
+      <div
+        className="absolute inset-0 bg-gray-900/60 backdrop-blur-sm"
+        onClick={onClose}
+      ></div>
 
-            {/* Campo Apellido Paterno */}
-            <div className="flex items-center border-b-2 border-gray-300 pb-2">
-              <input
-                type="text"
-                placeholder="Apellido Paterno"
-                name="apellido_paterno"
-                value={formData.apellido_paterno}
-                onChange={handleChange}
-                className="w-full bg-transparent outline-none placeholder-gray-600"
-                required
-              />
-              <FaUserCircle className="text-2xl text-gray-600 ml-3" />
-            </div>
+      <div className="relative bg-white rounded-xl shadow-2xl w-full max-w-4xl p-10 z-10">
+        <button
+          onClick={onClose}
+          className="absolute top-3 right-4 text-gray-500 hover:text-gray-700 text-2xl font-bold"
+        >
+          ×
+        </button>
 
-            {/* Campo Apellido Materno */}
-            <div className="flex items-center border-b-2 border-gray-300 pb-2">
-              <input
-                type="text"
-                placeholder="Apellido Materno"
-                name="apellido_materno"
-                value={formData.apellido_materno}
-                onChange={handleChange}
-                className="w-full bg-transparent outline-none placeholder-gray-600"
-                required
-              />
-              <FaUserCircle className="text-2xl text-gray-600 ml-3" />
-            </div>
+        <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">
+          {usuario ? "Editar Usuario" : "Registrar Usuario"}
+        </h2>
 
-            {/* Campo Correo Electrónico */}
-            <div className="flex items-center border-b-2 border-gray-300 pb-2">
-              <input
-                type="email"
-                placeholder="Correo Electrónico"
-                name="correo_electronico"
-                value={formData.correo_electronico}
-                onChange={handleChange}
-                className="w-full bg-transparent outline-none placeholder-gray-600"
-                required
-              />
-              <MdOutlineMailOutline className="text-2xl text-gray-600 ml-3" />
-            </div>
-
-            {/* Campo Fecha de Nacimiento */}
-            <div className="flex items-center border-b-2 border-gray-300 pb-2">
-              <input
-                type="date"
-                name="fecha_nacimiento"
-                value={formData.fecha_nacimiento}
-                onChange={handleChange}
-                className="w-full bg-transparent outline-none placeholder-gray-600"
-                required
-              />
-              <MdOutlineDateRange className="text-2xl text-gray-600 ml-3" />
-            </div>
-
-            {/* Campo Dirección */}
-            <div className="flex items-center border-b-2 border-gray-300 pb-2">
-              <input
-                type="text"
-                placeholder="Dirección"
-                name="direccion"
-                value={formData.direccion}
-                onChange={handleChange}
-                className="w-full bg-transparent outline-none placeholder-gray-600"
-                required
-              />
-              <LiaAddressCardSolid className="text-2xl text-gray-600 ml-3" />
-            </div>
-
-            {/* Campo Contraseña */}
-            {!usuario && (
-              <div className="flex items-center border-b-2 border-gray-300 pb-2">
-                <input
-                  type="password"
-                  placeholder="Contraseña"
-                  name="contraseña"
-                  value={formData.contraseña}
-                  onChange={handleChange}
-                  className="w-full bg-transparent outline-none placeholder-gray-600"
-                  required
-                />
-                <GiPadlock className="text-2xl text-gray-600 ml-3" />
+        <form
+          onSubmit={handleSubmit}
+          className="grid grid-cols-1 md:grid-cols-2 gap-6"
+        >
+          {[
+            { name: "nombre", placeholder: "Nombre", icon: <FaUserCircle /> },
+            {
+              name: "apellido_paterno",
+              placeholder: "Apellido Paterno",
+              icon: <FaUserCircle />,
+            },
+            {
+              name: "apellido_materno",
+              placeholder: "Apellido Materno",
+              icon: <FaUserCircle />,
+            },
+            {
+              name: "correo_electronico",
+              placeholder: "Correo Electrónico",
+              icon: <MdOutlineMailOutline />,
+            },
+            {
+              name: "fecha_nacimiento",
+              placeholder: "Fecha de Nacimiento",
+              type: "date",
+              icon: <MdOutlineDateRange />,
+            },
+            {
+              name: "direccion",
+              placeholder: "Dirección",
+              icon: <LiaAddressCardSolid />,
+            },
+          ]
+            .concat(
+              !usuario
+                ? [
+                    {
+                      name: "contraseña",
+                      placeholder: "Contraseña",
+                      type: "password",
+                      icon: <GiPadlock />,
+                    },
+                    {
+                      name: "confirmarContraseña",
+                      placeholder: "Confirmar Contraseña",
+                      type: "password",
+                      icon: <GiPadlock />,
+                    },
+                  ]
+                : []
+            )
+            .map((campo, i) => (
+              <div key={i}>
+                <div
+                  className={`flex items-center border-b-2 pb-2 ${
+                    errors[campo.name] ? "border-red-500" : "border-gray-300"
+                  }`}
+                >
+                  <input
+                    type={campo.type || "text"}
+                    placeholder={campo.placeholder}
+                    name={campo.name}
+                    value={formData[campo.name]}
+                    onChange={handleChange}
+                    className={`w-full bg-transparent outline-none placeholder-gray-600 text-gray-800 ${
+                      errors[campo.name] ? "text-red-600" : ""
+                    }`}
+                    required
+                  />
+                  <span
+                    className={`text-2xl ml-3 ${
+                      errors[campo.name] ? "text-red-500" : "text-gray-500"
+                    }`}
+                  >
+                    {campo.icon}
+                  </span>
+                </div>
+                {errors[campo.name] && (
+                  <p className="text-red-600 text-sm mt-1">
+                    {errors[campo.name]}
+                  </p>
+                )}
               </div>
-            )}
+            ))}
 
-            {/* Campo Confirmar Contraseña */}
-            {!usuario && (
-              <div className="flex items-center border-b-2 border-gray-300 pb-2">
-                <input
-                  type="password"
-                  placeholder="Confirme Contraseña"
-                  name="confirmarContraseña"
-                  value={formData.confirmarContraseña}
-                  onChange={handleChange}
-                  className="w-full bg-transparent outline-none placeholder-gray-600"
-                  required
-                />
-                <GiPadlock className="text-2xl text-gray-600 ml-3" />
-              </div>
-            )}
-
-            {/* Botón de Enviar */}
-            <div className="flex justify-center mt-6">
-              <button
-                type="submit"
-                className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold"
-              >
-                {usuario ? "Actualizar" : "Registrar"}
-              </button>
-            </div>
-          </form>
-
-          {/* Botón para cerrar el modal */}
-          <div className="absolute top-0 right-0 p-2">
-            <button
-              onClick={onClose}
-              className="text-gray-600 hover:text-gray-800 text-xl font-bold"
+          {/* Rol */}
+          <div className="flex flex-col md:col-span-2">
+            <label className="mb-1 text-gray-700 font-semibold">Rol</label>
+            <select
+              name="rol"
+              value={formData.rol}
+              onChange={handleChange}
+              className="border-b-2 border-gray-300 pb-2 outline-none text-gray-700"
             >
-              X
+              <option value="usuario">Usuario</option>
+              <option value="administrador">Administrador</option>
+            </select>
+          </div>
+
+          <div className="md:col-span-2 flex justify-center mt-6">
+            <button
+              type="submit"
+              className="bg-accent text-white px-10 py-3 rounded-lg hover:bg-blue-700 transition font-semibold shadow-md"
+            >
+              {usuario ? "Actualizar" : "Registrar"}
             </button>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );
