@@ -10,6 +10,7 @@ import PanelControl from "./paginas/panelControl";
 import Usuarios from "./paginas/Usuarios";
 import Productos from "./paginas/Productos";
 import Pedidos from "./paginas/pedidos";
+import Menu from "./componentes/rolUsuario/menuPrincipal";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="usuarios" element={<Usuarios />} />
         <Route path="productos" element={<Productos />} />
         <Route path="pedidos" element={<Pedidos />} />
+        <Route path="panelUsuario" element={<Menu />} />
       </Route>
     </Routes>
   );
