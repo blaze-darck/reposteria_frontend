@@ -28,46 +28,52 @@ export default function InicioSesionUsuarios() {
       return;
     }
 
+    localStorage.setItem("usuarioActual", JSON.stringify(usuarioEncontrado));
     setError("");
-    navigate("/panelControl");
+
+    if (usuarioEncontrado.rol === "administrador") {
+      navigate("/panelControl");
+    } else {
+      navigate("/panelUsuario");
+    }
   };
 
   return (
-    <div className="w-full min-h-screen flex items-center justify-center bg-[#E6B8B8] p-6">
-      <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8 border-t-8 border-[#D4AF37]">
+    <div className="w-full min-h-screen flex items-center justify-center bg-primario p-6">
+      <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8 border-t-8 border-secundario">
         {/* Logo / título */}
-        <h2 className="text-3xl font-bold text-center mb-4 text-[#5A3825]">
+        <h2 className="text-3xl font-bold text-center mb-4 text-texto">
           DULCE TENTACIÓN
         </h2>
-        <h3 className="text-2xl font-semibold text-center mb-8 text-[#5A3825]">
+        <h3 className="text-2xl font-semibold text-center mb-8 text-texto">
           INICIAR SESIÓN
         </h3>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Correo */}
-          <div className="flex items-center border-b-2 border-[#5A3825] pb-2">
+          <div className="flex items-center border-b-2 border-secundario pb-2">
             <input
               type="email"
               placeholder="Correo Electrónico"
-              className="w-full bg-transparent outline-none placeholder-[#5A3825] text-[#5A3825]"
+              className="w-full bg-transparent outline-none placeholder-texto text-texto"
               value={correo}
               onChange={(e) => setCorreo(e.target.value)}
               required
             />
-            <MdOutlineMailOutline className="text-2xl text-[#5A3825] ml-3" />
+            <MdOutlineMailOutline className="text-2xl text-texto ml-3" />
           </div>
 
           {/* Contraseña */}
-          <div className="flex items-center border-b-2 border-[#5A3825] pb-2">
+          <div className="flex items-center border-b-2 border-secundario pb-2">
             <input
               type="password"
               placeholder="Contraseña"
-              className="w-full bg-transparent outline-none placeholder-[#5A3825] text-[#5A3825]"
+              className="w-full bg-transparent outline-none placeholder-texto text-texto"
               value={contrasena}
               onChange={(e) => setContrasena(e.target.value)}
               required
             />
-            <GiPadlock className="text-2xl text-[#5A3825] ml-3" />
+            <GiPadlock className="text-2xl text-texto ml-3" />
           </div>
 
           {/* Error */}
@@ -79,13 +85,24 @@ export default function InicioSesionUsuarios() {
           <div className="flex justify-center mt-6">
             <button
               type="submit"
-              className="bg-[#5A3825] text-[#E6B8B8] px-8 py-3 rounded-lg font-semibold 
-              hover:bg-[#3E2618] hover:text-[#D4AF37] transition-all duration-300 shadow-md"
+              className="bg-secundario text-texto px-8 py-3 rounded-lg font-semibold 
+              hover:bg-background hover:text-texto transition-all duration-300 shadow-md"
             >
               Entrar
             </button>
           </div>
         </form>
+
+        {/* Enlace para registrarse */}
+        <p className="text-center text-texto mt-6">
+          ¿No tienes cuenta?{" "}
+          <span
+            onClick={() => navigate("/registro")}
+            className="text-texto cursor-pointer hover:underline"
+          >
+            Regístrate aquí
+          </span>
+        </p>
       </div>
     </div>
   );
