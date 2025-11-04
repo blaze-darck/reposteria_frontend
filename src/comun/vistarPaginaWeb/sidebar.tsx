@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { HiMenuAlt1 } from "react-icons/hi";
 import { RxDashboard } from "react-icons/rx";
 import { FaRegUser } from "react-icons/fa";
@@ -6,69 +6,102 @@ import { FiShoppingCart } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
 const Sidebar = () => {
+  const [open, setOpen] = useState<boolean>(true);
+  const [usuarioActual, setUsuarioActual] = useState<any>(null);
+
+  useEffect(() => {
+    const usuario = localStorage.getItem("usuarioActual");
+    if (usuario) setUsuarioActual(JSON.parse(usuario));
+  }, []);
+
+  // Menús con control de roles
   const menus = [
-    { name: "Panel de Control", link: "panelControl", icon: RxDashboard },
-    { name: "Usuarios", link: "usuarios", icon: FaRegUser },
-    { name: "Productos", link: "productos", icon: FiShoppingCart },
+    {
+      name: "Panel de Control",
+      link: "panelControl",
+      icon: RxDashboard,
+      roles: ["usuario", "administrador"],
+    },
+    {
+      name: "Usuarios",
+      link: "usuarios",
+      icon: FaRegUser,
+      roles: ["administrador"],
+    },
+    {
+      name: "Productos",
+      link: "productos",
+      icon: FiShoppingCart,
+      roles: ["usuario", "administrador"],
+    },
+    {
+      name: "Pedidos",
+      link: "pedidos",
+      icon: FiShoppingCart,
+      roles: ["usuario", "administrador"],
+    },
   ];
-  const [open, setOpen] = React.useState<boolean>(true);
+
+  // Filtrar menús según rol del usuario
+  const menusFiltrados = menus.filter(
+    (menu) =>
+      !menu.roles || (usuarioActual && menu.roles.includes(usuarioActual.rol))
+  );
 
   return (
-    <section className="flex gap-6">
+    <section className="flex gap-6 overflow-x-hidden">
+      {/* Sidebar */}
       <div
-        className={`bg-[#5A3825] min-h-screen ${
+        className={`bg-primario min-h-screen ${
           open ? "w-72" : "w-16"
-        } duration-500 text-[#E6B8B8] px-4 shadow-xl`}
+        } duration-500 text-texto px-4 shadow-xl relative`}
       >
-        {/* Botón para abrir/cerrar */}
+        {/* Botón abrir/cerrar */}
         <div className="py-3 flex justify-end">
           <HiMenuAlt1
             size={26}
-            className="cursor-pointer text-[#D4AF37] hover:text-[#C49B2A] transition-colors duration-300"
+            className="cursor-pointer text-bg-secundario hover:text-bg-accent transition-colors duration-300"
             onClick={() => setOpen(!open)}
           />
         </div>
 
-        {/* Menú lateral */}
+        {/* Menú */}
         <div className="mt-4 flex flex-col gap-4 relative">
-          {menus.map((menu, i) => (
+          {menusFiltrados.map((menu, i) => (
             <Link
-              to={menu?.link}
+              to={menu.link}
               key={i}
               className="group flex items-center text-sm gap-3.5 font-medium p-2 rounded-md 
-              hover:bg-[#3E2618] hover:text-[#D4AF37] transition-all duration-300"
+                         hover:bg-primario-hover hover:text-bg-background transition-all duration-300 relative"
             >
-              <div className="text-[#E6B8B8] group-hover:text-[#D4AF37] transition-colors duration-300">
-                {React.createElement(menu?.icon, { size: 20 })}
+              {/* Icono */}
+              <div className="text-bg-secundario group-hover:text-secunadrio transition-colors duration-300">
+                {React.createElement(menu.icon, { size: 20 })}
               </div>
 
-              {/* Texto normal */}
+              {/* Texto principal */}
               <h2
                 style={{ transitionDelay: `${i + 3}00ms` }}
                 className={`whitespace-pre duration-500 ${
                   !open && "opacity-0 translate-x-28 overflow-hidden"
                 }`}
               >
-                {menu?.name}
+                {menu.name}
               </h2>
 
-              {/* Tooltip cuando está cerrado */}
-              <h2
-                className={`${
-                  open && "hidden"
-                } absolute left-48 bg-[#E6B8B8] text-[#5A3825] font-semibold whitespace-pre rounded-md drop-shadow-lg 
-                px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 
-                group-hover:duration-300 group-hover:w-fit`}
-              >
-                {menu?.name}
-              </h2>
+              {/* Tooltip cuando el sidebar está cerrado */}
+              {!open && (
+                <h2
+                  className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-background text-texto font-semibold whitespace-pre rounded-md drop-shadow-lg 
+               px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-50 text-center"
+                >
+                  {menu.name}
+                </h2>
+              )}
             </Link>
           ))}
         </div>
       </div>
-
-      {/* Contenedor principal derecho */}
-      <div className="m-3 text-xl text-[#5A3825] font-semibold"></div>
     </section>
   );
 };
