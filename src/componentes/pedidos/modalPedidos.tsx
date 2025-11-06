@@ -13,11 +13,9 @@ export default function ModalPedidos({ isOpen, onClose, onRegister, pedido }) {
   const [err, sE] = useState({});
   const [edit, sEdit] = useState(false);
 
-  // === Expresiones regulares ===
   const letrasRgx = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
   const numRgx = /^[0-9]+(\.[0-9]+)?$/;
 
-  // === Cargar datos si es edición ===
   useEffect(() => {
     if (pedido) {
       sF({
@@ -34,7 +32,6 @@ export default function ModalPedidos({ isOpen, onClose, onRegister, pedido }) {
     }
   }, [pedido]);
 
-  // === Validación de campos ===
   const validarCampo = (n, v) => {
     let e = "";
     switch (n) {
@@ -66,14 +63,12 @@ export default function ModalPedidos({ isOpen, onClose, onRegister, pedido }) {
     return e;
   };
 
-  // === Cambiar campo ===
   const c = (e) => {
     const { name, value } = e.target;
     sF({ ...f, [name]: value });
     sE({ ...err, [name]: validarCampo(name, value) });
   };
 
-  // === Validar todo el formulario ===
   const validarForm = () => {
     const e = {};
     Object.keys(f).forEach((k) => {
@@ -84,7 +79,6 @@ export default function ModalPedidos({ isOpen, onClose, onRegister, pedido }) {
     return Object.keys(e).length === 0;
   };
 
-  // === Enviar formulario ===
   const submit = (e) => {
     e.preventDefault();
     if (!validarForm()) return;
@@ -202,7 +196,7 @@ export default function ModalPedidos({ isOpen, onClose, onRegister, pedido }) {
           <div className="flex justify-center mt-6">
             <button
               type="submit"
-              className="bg-secundario text-white px-10 py-3 rounded-lg hover:bg-green-700 transition font-semibold shadow-md"
+              className="bg- text-white px-10 py-3 rounded-lg hover:bg-green-700 transition font-semibold shadow-md"
             >
               {edit ? "Actualizar Pedido" : "Registrar Pedido"}
             </button>
