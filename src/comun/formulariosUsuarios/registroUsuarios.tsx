@@ -149,7 +149,7 @@ export default function RegistroUsuarios() {
     if (nuevoUsuario.rol === "administrador") {
       navigate("/panelControl");
     } else {
-      navigate("/usuarioHome");
+      navigate("/panelUsuario");
     }
   };
 
