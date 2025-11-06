@@ -11,6 +11,7 @@ import Usuarios from "./paginas/Usuarios";
 import Productos from "./paginas/Productos";
 import Pedidos from "./paginas/pedidos";
 import Menu from "./componentes/rolUsuario/menuPrincipal";
+import ProductosUsuarios from "./componentes/rolUsuario/productos";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="productos" element={<Productos />} />
         <Route path="pedidos" element={<Pedidos />} />
         <Route path="panelUsuario" element={<Menu />} />
+        <Route path="productosUsuario" element={<ProductosUsuarios />} />
       </Route>
     </Routes>
   );
