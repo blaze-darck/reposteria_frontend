@@ -14,13 +14,12 @@ const Sidebar = () => {
     if (usuario) setUsuarioActual(JSON.parse(usuario));
   }, []);
 
-  // Menús con control de roles
   const menus = [
     {
       name: "Panel de Control",
       link: "panelControl",
       icon: RxDashboard,
-      roles: ["usuario", "administrador"],
+      roles: ["administrador"],
     },
     {
       name: "Usuarios",
@@ -32,13 +31,25 @@ const Sidebar = () => {
       name: "Productos",
       link: "productos",
       icon: FiShoppingCart,
-      roles: ["usuario", "administrador"],
+      roles: ["administrador"],
     },
     {
       name: "Pedidos",
       link: "pedidos",
       icon: FiShoppingCart,
-      roles: ["usuario", "administrador"],
+      roles: ["administrador"],
+    },
+    {
+      name: "Menu Principal",
+      link: "panelUsuario",
+      icon: FiShoppingCart,
+      roles: ["usuario"],
+    },
+    {
+      name: "Productos",
+      link: "productosUsuario",
+      icon: FiShoppingCart,
+      roles: ["usuario"],
     },
   ];
 
