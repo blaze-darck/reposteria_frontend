@@ -1,25 +1,26 @@
 @import "tailwindcss";
 
 .bg-primario {
-  background-color: #e6b8b8;
+  background-color: #fb6f92;
+}
+.bg_secundario {
+  background-color: #ffafcc;
 }
 
-.bg-primario-hover {
-  background-color: #d4a1a1;
+.bg_primarioA {
+  background-color: #bde0fe;
+}
+.bg_secundarioA {
+  background-color: #a2d2ff;
 }
 
-.text-texto {
-  color: #2d3142;
+.bg_fondo {
+  background-color: #be95c4;
 }
 
-.bg-secundario {
-  background-color: #ffd166;
+.texto_letras {
+  background-color: #0f6c73;
 }
-
-.bg-accent {
-  background-color: #06d6a0;
-}
-
-.bg-background {
-  background-color: #f43f5e;
+.texto_letrasA {
+  background-color: #6ddad3;
 }
