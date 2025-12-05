@@ -1,73 +1,31 @@
-# React + TypeScript + Vite
+# Dulce Tentacion (Frontend)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Introduccion
 
-Currently, two official plugins are available:
+Un sistema web que ayudara en el manejo de tiendas encargadas en la venta de pasteles automatizando procesos y mejorando la satisfaccion del cliente
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Tegnologias Utilizadas
 
-## React Compiler
+Para este sistema en tema de frontend se utilizo las siguientes tegnologias:
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+- React
+- Tailwind Cs
 
-## Expanding the ESLint configuration
+## Instalacion del sistema
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Clonar el repositorio
+  Necesita ir al siguiente enlace copiarlo y con ayuda del editor de codigo que utilice o en la terminal con el comando git clone "repositorio"
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+https://github.com/blaze-darck/reposteria_frontend.git
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- Entrar al sistema
+  Luego de que usted haya clonado el repositorio necesitara entrar al repositorio en la terminal escriba el comando:
+  cd nombre_del_repositorio
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- Instalacion de Dependencias
+  Una ves dentro de la carpeta del sistema necesita instalar las dependencias necesarias para el debido funcionamiento esto se hace con el comando
+  npm install
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- Ejecutar el sistema
+  Una ves instalada todas las dependencias necesita probarlo con el siguiente comando
+  npm run dev
