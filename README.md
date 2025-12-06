@@ -72,3 +72,12 @@ npm run dev
 ```
 
 La aplicación estará disponible en: `http://localhost:5173/`
+
+### Prueba con backend
+
+utilizar el correo de administracion y entrar al sistema como administrador
+
+```bash
+paredesgabriel784@gmail.com
+dilegabo
+```
