@@ -1,31 +1,74 @@
-# Dulce Tentacion (Frontend)
+# Dulce Tentación (Frontend)
 
-## Introduccion
+Sistema web para la gestión integral de tiendas de repostería, diseñado para automatizar procesos y ofrecer una experiencia excepcional al cliente.
 
-Un sistema web que ayudara en el manejo de tiendas encargadas en la venta de pasteles automatizando procesos y mejorando la satisfaccion del cliente
+## Tabla de Contenidos
 
-## Tegnologias Utilizadas
+- [Características](#características)
+- [Tecnologías](#tecnologías)
+- [Requisitos Previos](#requisitos-previos)
+- [Instalación](#instalación)
+- [Configuración](#configuración)
+- [Ejecución](#ejecución)
+- [Estructura del Proyecto](#estructura-del-proyecto)
+- [Scripts Disponibles](#scripts-disponibles)
 
-Para este sistema en tema de frontend se utilizo las siguientes tegnologias:
+## Características
 
-- React
-- Tailwind Cs
+- Catálogo de productos de repostería
+- Gestión de usuarios y perfiles
+- Autenticación segura
 
-## Instalacion del sistema
+- Interfaz intuitiva y atractiva
 
-- Clonar el repositorio
-  Necesita ir al siguiente enlace copiarlo y con ayuda del editor de codigo que utilice o en la terminal con el comando git clone "repositorio"
+## 🛠Tecnologías
 
-https://github.com/blaze-darck/reposteria_frontend.git
+- **React** - Librería de JavaScript para interfaces de usuario
+- **Tailwind CSS** - Framework de CSS utility-first
+- **React Router** - Navegación entre páginas
+- **Axios** - Cliente HTTP para API requests
+- **Vite** - Build tool y dev server ultrarrápido
 
-- Entrar al sistema
-  Luego de que usted haya clonado el repositorio necesitara entrar al repositorio en la terminal escriba el comando:
-  cd nombre_del_repositorio
+## Requisitos Previos
 
-- Instalacion de Dependencias
-  Una ves dentro de la carpeta del sistema necesita instalar las dependencias necesarias para el debido funcionamiento esto se hace con el comando
-  npm install
+Antes de comenzar, asegúrate de tener instalado:
 
-- Ejecutar el sistema
-  Una ves instalada todas las dependencias necesita probarlo con el siguiente comando
-  npm run dev
+- [Node.js](https://nodejs.org/) (v16 o superior)
+- [npm](https://www.npmjs.com/)
+- [Git](https://git-scm.com/)
+
+> **Nota:** Este frontend requiere que el backend esté ejecutándose. Revisa el [README del backend](https://github.com/blaze-darck/reposteria_backend) para instrucciones de instalación.
+
+## 📦 Instalación
+
+### 1. Clonar el repositorio
+
+```bash
+git clone https://github.com/blaze-darck/reposteria_frontend.git
+```
+
+### 2. Navegar al directorio del proyecto
+
+```bash
+cd reposteria_frontend
+```
+
+### 3. Instalar dependencias
+
+Con npm:
+
+```bash
+npm install
+```
+
+## Configuración
+
+## Ejecución
+
+### Iniciar el servidor de desarrollo
+
+```bash
+npm run dev
+```
+
+La aplicación estará disponible en: `http://localhost:5173`
